@@ -8,7 +8,7 @@ import re
 def load_college_programs():
     programs = {}
     try:
-        with open('college_programs.csv', mode='r') as file:
+        with open(r'c:\codes\Simple-Student-Info-System-main\college_programs.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 college_code = row[0]
@@ -22,7 +22,7 @@ def load_college_programs():
 def load_college_mapping():
     mapping = {}
     try:
-        with open('college_mapping.csv', mode='r') as file:
+        with open(r'c:\codes\Simple-Student-Info-System-main\college_mapping.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 college_name = row[0]
@@ -63,7 +63,7 @@ def save_to_csv():
         messagebox.showwarning("Input Error", "All fields must be filled out")
         return
 
-    with open('students.csv', 'a', newline='') as file:
+    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='a') as file:
         writer = csv.writer(file)
         writer.writerow([idnum, fname, lname, sex, progcode, year, collname, collcode])
 
@@ -107,10 +107,10 @@ def open_delete_college_window():
             del college_programs[college_code]
 
         # Remove students associated with the college
-        with open('students.csv', 'r', newline='') as file:
+        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'r', newline='') as file:
             rows = list(csv.reader(file))
 
-        with open('students.csv', 'w', newline='') as file:
+        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'w', newline='') as file:
             writer = csv.writer(file)
             for row in rows:
                 if row[7] != college_code:  # College Code is in the 8th column (index 7)
@@ -133,7 +133,7 @@ def open_delete_college_window():
 
 def load_from_csv():
     try:
-        with open('students.csv', newline='') as file:
+        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 student_info.insert('', 'end', values=row)
@@ -149,10 +149,10 @@ def delete_selected():
     for item in selected_item:
         student_info.delete(item)
 
-    with open('students.csv', 'r', newline='') as file:
+    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
         rows = list(csv.reader(file))
 
-    with open('students.csv', 'w', newline='') as file:
+    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
         writer = csv.writer(file)
         for row in rows:
             if not any(row == student_info.item(item, 'values') for item in selected_item):
