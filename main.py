@@ -79,17 +79,16 @@ def save_to_csv():
     collcode_var.set("")
 
 def open_delete_college_window():
-    # Create a new window
     delete_college_window = Toplevel(root)
     delete_college_window.title("Delete College")
     delete_college_window.geometry("400x300")
 
-    # Label and Combobox for selecting a college
+    # combobox for college selection
     Label(delete_college_window, text="Select College to Delete:", font=("Arial", 12)).pack(pady=10)
     college_combobox = ttk.Combobox(delete_college_window, values=list(college_mapping.keys()), state="readonly", font=("Arial", 10))
     college_combobox.pack(pady=10)
 
-    # Function to delete the selected college
+    # delete selected
     def delete_college():
         selected_college = college_combobox.get()
         if not selected_college:
@@ -99,6 +98,10 @@ def open_delete_college_window():
         # Get the college code for the selected college
         college_code = college_mapping.get(selected_college)
 
+        if not college_code:
+            messagebox.showerror("Error", "Selected college does not exist!")
+            return
+
         # Remove the college from the mapping
         del college_mapping[selected_college]
 
@@ -106,19 +109,27 @@ def open_delete_college_window():
         if college_code in college_programs:
             del college_programs[college_code]
 
-        # Remove students associated with the college
-        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'r', newline='') as file:
-            rows = list(csv.reader(file))
+        # Remove students associated with the college from the CSV file
+        try:
+            with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'r', newline='') as file:
+                rows = list(csv.reader(file))
 
-        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'w', newline='') as file:
-            writer = csv.writer(file)
-            for row in rows:
-                if row[7] != college_code:  # College Code is in the 8th column (index 7)
-                    writer.writerow(row)
+            with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                for row in rows:
+                    # Ensure the row has enough columns before accessing index 7
+                    if len(row) > 7 and row[7] != college_code:  # College Code is in the 8th column (index 7)
+                        writer.writerow(row)
+        except FileNotFoundError:
+            messagebox.showerror("File Error", "students.csv not found!")
+            return
 
-        # Reload the Treeview with updated student data
-        student_info.delete(*student_info.get_children())
-        load_from_csv()
+        # Remove students associated with the college from the Treeview
+        for child in student_info.get_children():
+            values = student_info.item(child, 'values')
+            # Ensure the row has enough columns before accessing index 7
+            if len(values) > 7 and values[7] == college_code:  # College Code is in the 8th column (index 7)
+                student_info.delete(child)
 
         # Update the college dropdowns
         CollName_entry['values'] = list(college_mapping.keys())
@@ -178,13 +189,26 @@ def update_search_suggestions(event):
             student_info.selection_set(item)
             student_info.see(item)
 def sort_by_column(column):
-    column_index = student_info["columns"].index(column)
-    data = [(student_info.item(child, 'values')[column_index].strip().lower(), child) for child in student_info.get_children('')]
-    data.sort()
+    try:
 
-    for index, (value, child) in enumerate(data):
-        student_info.move(child, '', index)
-        student_info.move(child, '', index)
+        column_index = student_info["columns"].index(column)
+
+        # Extract data from the Treeview, ensuring no out-of-range errors
+        data = []
+        for child in student_info.get_children(''):
+            values = student_info.item(child, 'values')
+            if len(values) > column_index:
+                data.append((values[column_index].strip().lower(), child))
+            else:
+                data.append(("", child))
+
+        data.sort()
+
+        for index, (value, child) in enumerate(data):
+            student_info.move(child, '', index)
+
+    except ValueError:
+        messagebox.showerror("Error", f"Column '{column}' not found in Treeview.")
 
 def validate_idnum(new_value):
     pattern = re.compile(r'^\d{0,4}(-\d{0,4})?$')
@@ -294,7 +318,7 @@ search_entry = Entry(Search_frame, textvariable=search_var, font=("Arial", 10))
 search_entry.grid(row=0, column=0, padx=20)
 search_entry.bind('<KeyRelease>', update_search_suggestions)
 
-# Add a button to open the "Delete College" window
+# Button for college delete window
 button_delete_college = ttk.Button(Search_frame, text="Delete College", command=lambda: open_delete_college_window(), style="TButton")
 button_delete_college.grid(row=0, column=5, padx=10)
 
