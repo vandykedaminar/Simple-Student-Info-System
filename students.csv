@@ -1,53 +1,51 @@
-2023-0360,Vandyke,Daminar,M,BS IN COMPUTER SCIENCE,2,College of Computer Studies,CCS
-2025-0001,John,Doe,M,BS IN COMPUTER ENGINEERING,1,College of Engineering and Technology,COET
-2025-0002,Jane,Smith,F,BS IN INFORMATION TECHNOLOGY,2,College of Computer Studies,CCS
-2025-0003,Michael,Brown,M,BS IN CIVIL ENGINEERING,3,College of Engineering and Technology,COET
-2025-0004,Emily,Davis,F,BS IN BIOLOGY (GENERAL),1,College of Science and Mathematics,CSM
-2025-0005,Chris,Wilson,M,BS IN BUSINESS ADMINISTRATION (ECONOMICS),4,College of Business Administration & Accountancy,CBAA
-2025-0006,Sarah,Johnson,F,BS IN NURSING,2,College of Nursing,CHS
-2025-0007,David,Martinez,M,BS IN MECHANICAL ENGINEERING,3,College of Engineering and Technology,COET
-2025-0008,Laura,Garcia,F,BS IN PSYCHOLOGY,1,College of Arts and Science,CASS
-2025-0009,James,Anderson,M,BS IN ELECTRICAL ENGINEERING,2,College of Engineering and Technology,COET
-2025-0010,Linda,Thomas,F,BS IN MATHEMATICS,4,College of Science and Mathematics,CSM
-2025-0011,Robert,Moore,M,BS IN CHEMICAL ENGINEERING,1,College of Engineering and Technology,COET
-2025-0012,Patricia,Taylor,F,BS IN STATISTICS,3,College of Science and Mathematics,CSM
-2025-0013,Daniel,Jackson,M,BS IN CERAMICS ENGINEERING,2,College of Engineering and Technology,COET
-2025-0014,Barbara,White,F,BS IN INFORMATION SYSTEMS,4,College of Computer Studies,CCS
-2025-0015,Matthew,Harris,M,BS IN ENVIRONMENTAL ENGINEERING TECHNOLOGY,1,College of Engineering and Technology,COET
-2025-0016,Elizabeth,Martin,F,BS IN BIOLOGY (MARINE),3,College of Science and Mathematics,CSM
-2025-0017,Anthony,Thompson,M,BS IN ACCOUNTANCY,2,College of Business Administration & Accountancy,CBAA
-2025-0018,Jennifer,Martinez,F,BS IN HOTEL AND RESTAURANT MANAGEMENT,4,College of Business Administration & Accountancy,CBAA
-2025-0019,Joshua,Clark,M,BS IN ELECTRONICS & COMMUNICATIONS ENGINEERING,1,College of Engineering and Technology,COET
-2025-0020,Ashley,Rodriguez,F,BS IN BIOLOGY (BOTANY),2,College of Science and Mathematics,CSM
-2025-0021,Andrew,Lewis,M,BS IN COMPUTER SCIENCE,3,College of Computer Studies,CCS
-2025-0022,Jessica,Lee,F,BS IN BIOLOGY (ZOOLOGY),1,College of Science and Mathematics,CSM
-2025-0023,Joseph,Walker,M,BS IN METALLURGICAL ENGINEERING,4,College of Engineering and Technology,COET
-2025-0024,Mary,Hall,F,BS IN TECHNOLOGY TEACHER EDUCATION (INDUSTRIAL TECH),2,College of Education,CED
-2025-0025,Christopher,Allen,M,BS IN POLITICAL SCIENCE,3,College of Arts and Science,CASS
-2025-0026,Amanda,Young,F,BS IN GENERAL SCIENCE,1,College of Education,CED
-2025-0027,Kevin,Hernandez,M,BS IN MINING ENG'G.,2,College of Engineering and Technology,COET
-2025-0028,Melissa,King,F,BS IN FILIPINO,4,College of Arts and Science,CASS
-2025-0029,Mark,Wright,M,BS IN INDUSTRIAL EDUCATION (DRAFTING),3,College of Education,CED
-2025-0030,Susan,Lopez,F,BS IN CHEMISTRY,1,College of Science and Mathematics,CSM
-2025-0031,Steven,Scott,M,BS IN SECONDARY EDUCATION (MATHEMATICS),2,College of Education,CED
-2025-0032,Kimberly,Green,F,BS IN SECONDARY EDUCATION (PHYSICS),4,College of Education,CED
-2025-0033,Paul,Adams,M,BS IN SECONDARY EDUCATION (CHEMISTRY),3,College of Education,CED
-2025-0034,Michelle,Baker,F,BS IN SECONDARY EDUCATION (BIOLOGY),1,College of Education,CED
-2025-0035,Edward,Gonzalez,M,BS IN SECONDARY EDUCATION (MAPEH),2,College of Education,CED
-2025-0036,Angela,Nelson,F,BS IN SECONDARY EDUCATION (TLE),4,College of Education,CED
-2025-0037,Jason,Carter,M,BS IN SECONDARY EDUCATION (GENERAL SCIENCE),3,College of Education,CED
-2025-0038,Deborah,Mitchell,F,BS IN ELEMENTARY EDUCATION (ENGLISH),1,College of Education,CED
-2025-0039,Ryan,Perez,M,BS IN ELEMENTARY EDUCATION (SCIENCE AND HEALTH),2,College of Education,CED
-2025-0040,Laura,Roberts,F,BS IN TECHNOLOGY TEACHER EDUCATION (DRAFTING TECH),4,College of Education,CED
-2025-0041,Eric,Turner,M,BS IN ELECTRONICS AND COMPUTER TECHNOLOGY (EMBEDDED SYSTEMS),3,College of Computer Studies,CCS
-2025-0042,Rebecca,Phillips,F,BS IN ELECTRONICS AND COMPUTER TECHNOLOGY (COMMUNICATIONS SYSTEM),1,College of Computer Studies,CCS
-2025-0043,Jacob,Campbell,M,DIPLOMA IN ELECTRONICS TECHNOLOGY,2,College of Computer Studies,CCS
-2025-0044,Stephanie,Parker,F,DIPLOMA IN ELECTRONICS ENGINEERING TECH (Communication Electronics),4,College of Computer Studies,CCS
-2025-0045,Jonathan,Evans,M,DIPLOMA IN ELECTRONICS ENGINEERING TECH (Computer Electronics),3,College of Computer Studies,CCS
-2025-0046,Sharon,Edwards,F,DIPLOMA IN CHEMICAL ENGINEERING TECHNOLOGY,1,College of Engineering and Technology,COET
-2025-0047,Patrick,Collins,M,BS IN ENVIRONMENTAL ENGINEERING TECHNOLOGY,2,College of Engineering and Technology,COET
-2025-0048,Emily,Stewart,F,BS IN CERAMICS ENGINEERING,4,College of Engineering and Technology,COET
-2025-0049,Scott,Sanchez,M,BS IN MECHANICAL ENGINEERING,3,College of Engineering and Technology,COET
-2025-0050,Anna,Morris,F,BS IN BIOLOGY (GENERAL),1,College of Science and Mathematics,CSM
-1231-1241,Vandsad,alglka,F,BS IN CHEMICAL ENGINEERING,1,College of Engineering and Technology,COET
-
+2025-0051,Michael,Johnson,M,BS IN COMPUTER SCIENCE,2,College of Computer Studies,CCS
+2025-0052,Samantha,Williams,F,BS IN INFORMATION TECHNOLOGY,3,College of Computer Studies,CCS
+2025-0053,David,Jones,M,BS IN CIVIL ENGINEERING,1,College of Engineering and Technology,COET
+2025-0054,Amanda,Brown,F,BS IN ELECTRICAL ENGINEERING,4,College of Engineering and Technology,COET
+2025-0055,Christopher,Davis,M,BS IN MECHANICAL ENGINEERING,2,College of Engineering and Technology,COET
+2025-0056,Jessica,Miller,F,BS IN BIOLOGY (GENERAL),3,College of Science and Mathematics,CSM
+2025-0057,Daniel,Wilson,M,BS IN STATISTICS,1,College of Science and Mathematics,CSM
+2025-0058,Emily,Moore,F,BS IN BUSINESS ADMINISTRATION (ECONOMICS),4,College of Business Administration & Accountancy,CBAA
+2025-0059,Matthew,Taylor,M,BS IN ACCOUNTANCY,2,College of Business Administration & Accountancy,CBAA
+2025-0060,Sarah,Anderson,F,BS IN NURSING,3,College of Nursing,CHS
+2025-0061,Joshua,Thomas,M,BS IN PSYCHOLOGY,1,College of Arts and Science,CASS
+2025-0062,Laura,Jackson,F,BS IN POLITICAL SCIENCE,4,College of Arts and Science,CASS
+2025-0063,Andrew,White,M,BS IN SECONDARY EDUCATION (MATHEMATICS),2,College of Education,CED
+2025-0064,Melissa,Harris,F,BS IN SECONDARY EDUCATION (PHYSICS),3,College of Education,CED
+2025-0065,Kevin,Martin,M,BS IN SECONDARY EDUCATION (CHEMISTRY),1,College of Education,CED
+2025-0066,Ashley,Thompson,F,BS IN SECONDARY EDUCATION (BIOLOGY),4,College of Education,CED
+2025-0067,Anthony,Garcia,M,BS IN ELEMENTARY EDUCATION (ENGLISH),2,College of Education,CED
+2025-0068,Jennifer,Martinez,F,BS IN ELEMENTARY EDUCATION (SCIENCE AND HEALTH),3,College of Education,CED
+2025-0069,Joseph,Robinson,M,BS IN TECHNOLOGY TEACHER EDUCATION (INDUSTRIAL TECH),1,College of Education,CED
+2025-0070,Rebecca,Clark,F,BS IN TECHNOLOGY TEACHER EDUCATION (DRAFTING TECH),4,College of Education,CED
+2025-0071,Steven,Rodriguez,M,BS IN INFORMATION SYSTEMS,2,College of Computer Studies,CCS
+2025-0072,Kimberly,Lewis,F,BS IN ELECTRONICS AND COMPUTER TECHNOLOGY (EMBEDDED SYSTEMS),3,College of Computer Studies,CCS
+2025-0073,Paul,Lee,M,BS IN ELECTRONICS AND COMPUTER TECHNOLOGY (COMMUNICATIONS SYSTEM),1,College of Computer Studies,CCS
+2025-0074,Michelle,Walker,F,DIPLOMA IN ELECTRONICS TECHNOLOGY,4,College of Computer Studies,CCS
+2025-0075,Edward,Hall,M,DIPLOMA IN ELECTRONICS ENGINEERING TECH (Communication Electronics),2,College of Computer Studies,CCS
+2025-0076,Angela,Allen,F,DIPLOMA IN ELECTRONICS ENGINEERING TECH (Computer Electronics),3,College of Computer Studies,CCS
+2025-0077,Jason,Young,M,DIPLOMA IN CHEMICAL ENGINEERING TECHNOLOGY,1,College of Engineering and Technology,COET
+2025-0078,Deborah,Hernandez,F,BS IN ENVIRONMENTAL ENGINEERING TECHNOLOGY,4,College of Engineering and Technology,COET
+2025-0079,Ryan,King,M,BS IN CERAMICS ENGINEERING,2,College of Engineering and Technology,COET
+2025-0080,Laura,Wright,F,BS IN METALLURGICAL ENGINEERING,3,College of Engineering and Technology,COET
+2025-0081,Eric,Lopez,M,BS IN BIOLOGY (BOTANY),1,College of Science and Mathematics,CSM
+2025-0082,Rebecca,Scott,F,BS IN BIOLOGY (ZOOLOGY),4,College of Science and Mathematics,CSM
+2025-0083,Jacob,Green,M,BS IN BIOLOGY (MARINE),2,College of Science and Mathematics,CSM
+2025-0084,Stephanie,Baker,F,BS IN CHEMISTRY,3,College of Science and Mathematics,CSM
+2025-0085,Jonathan,Adams,M,BS IN MATHEMATICS,1,College of Science and Mathematics,CSM
+2025-0086,Sharon,Nelson,F,BS IN PHYSICS,4,College of Science and Mathematics,CSM
+2025-0087,Patrick,Carter,M,BS IN GENERAL SCIENCE,2,College of Education,CED
+2025-0088,Emily,Mitchell,F,BS IN INDUSTRIAL EDUCATION (DRAFTING),3,College of Education,CED
+2025-0089,Scott,Perez,M,BS IN SECONDARY EDUCATION (MAPEH),1,College of Education,CED
+2025-0090,Anna,Roberts,F,BS IN SECONDARY EDUCATION (TLE),4,College of Education,CED
+2025-0091,Michael,Turner,M,BS IN SECONDARY EDUCATION (GENERAL SCIENCE),2,College of Education,CED
+2025-0092,Susan,Phillips,F,BS IN ELEMENTARY EDUCATION (ENGLISH),3,College of Education,CED
+2025-0093,Steven,Campbell,M,BS IN ELEMENTARY EDUCATION (SCIENCE AND HEALTH),1,College of Education,CED
+2025-0094,Kimberly,Parker,F,BS IN TECHNOLOGY TEACHER EDUCATION (INDUSTRIAL TECH),4,College of Education,CED
+2025-0095,Paul,Evans,M,BS IN TECHNOLOGY TEACHER EDUCATION (DRAFTING TECH),2,College of Education,CED
+2025-0096,Michelle,Edwards,F,BS IN BUSINESS ADMINISTRATION (ENTREPRENEURIAL MARKETING),3,College of Business Administration & Accountancy,CBAA
+2025-0097,Edward,Collins,M,BS IN HOTEL AND RESTAURANT MANAGEMENT,1,College of Business Administration & Accountancy,CBAA
+2025-0098,Angela,Stewart,F,BS IN ACCOUNTANCY,4,College of Business Administration & Accountancy,CBAA
+2025-0099,Jason,Sanchez,M,BS IN BUSINESS ADMINISTRATION (BUSINESS ECONOMICS),2,College of Business Administration & Accountancy,CBAA
+2025-0100,Deborah,Morris,F,BS IN BUSINESS ADMINISTRATION (ECONOMICS),3,College of Business Administration & Accountancy,CBAA
+2023-2971,Nina,Jamelarin,F,BS IN CERAMICS ENGINEERING,2,College of Engineering and Technology,COET

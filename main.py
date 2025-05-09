@@ -8,7 +8,7 @@ import re
 def load_college_programs():
     programs = {}
     try:
-        with open(r'c:\codes\Simple-Student-Info-System-main\college_programs.csv', mode='r') as file:
+        with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_programs.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 college_code = row[0]
@@ -18,11 +18,11 @@ def load_college_programs():
         messagebox.showerror("File Error", "college_programs.csv not found!")
     return programs
 
-# Load college mapping from CSV
+
 def load_college_mapping():
     mapping = {}
     try:
-        with open(r'c:\codes\Simple-Student-Info-System-main\college_mapping.csv', mode='r') as file:
+        with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_mapping.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 college_name = row[0]
@@ -43,12 +43,103 @@ def autofill_code(event):
         CollCode_entry.insert(0, college_mapping[selected_college])
         program_combobox['values'] = college_programs.get(college_mapping[selected_college], [])
 
-def autofill_program_code(event):
-    selected_program = program_combobox.get()
-    if selected_program:
-        ProgCode_entry.delete(0, END)
-        ProgCode_entry.insert(0, selected_program)
+def open_edit_student_window():
+    selected_item = student_info.selection()
+    if not selected_item:
+        messagebox.showwarning("Selection Error", "No student selected!")
+        return
 
+    
+    student_data = student_info.item(selected_item[0], 'values')
+
+    
+    edit_window = Toplevel(root)
+    edit_window.title("Edit Student")
+    edit_window.geometry("400x600")
+
+    
+    edit_idnum_var = StringVar(value=student_data[0])
+    edit_fname_var = StringVar(value=student_data[1])
+    edit_lname_var = StringVar(value=student_data[2])
+    edit_sex_var = StringVar(value=student_data[3])
+    edit_progcode_var = StringVar(value=student_data[4])
+    edit_year_var = IntVar(value=student_data[5])
+    edit_collname_var = StringVar(value=student_data[6])
+    edit_collcode_var = StringVar(value=student_data[7])
+
+    
+    Label(edit_window, text="ID Number:").pack(pady=5)
+    Entry(edit_window, textvariable=edit_idnum_var).pack(pady=5)
+
+    Label(edit_window, text="First Name:").pack(pady=5)
+    Entry(edit_window, textvariable=edit_fname_var).pack(pady=5)
+
+    Label(edit_window, text="Last Name:").pack(pady=5)
+    Entry(edit_window, textvariable=edit_lname_var).pack(pady=5)
+
+    Label(edit_window, text="Sex:").pack(pady=5)
+    ttk.Combobox(edit_window, values=["F", "M"], textvariable=edit_sex_var, state="readonly").pack(pady=5)
+
+    Label(edit_window, text="Program Code:").pack(pady=5)
+    Entry(edit_window, textvariable=edit_progcode_var).pack(pady=5)
+
+    Label(edit_window, text="Year Level:").pack(pady=5)
+    ttk.Combobox(edit_window, values=["1", "2", "3", "4"], textvariable=edit_year_var, state="readonly").pack(pady=5)
+
+    Label(edit_window, text="College Name:").pack(pady=5)
+    college_combobox = ttk.Combobox(edit_window, values=list(college_mapping.keys()), textvariable=edit_collname_var, state="readonly")
+    college_combobox.pack(pady=5)
+
+    Label(edit_window, text="College Code:").pack(pady=5)
+    Entry(edit_window, textvariable=edit_collcode_var, state="readonly").pack(pady=5)
+
+    
+    def autofill_edit_college_code(event):
+        selected_college = edit_collname_var.get()
+        if selected_college in college_mapping:
+            edit_collcode_var.set(college_mapping[selected_college])
+
+    college_combobox.bind("<<ComboboxSelected>>", autofill_edit_college_code)
+
+    
+    def save_changes():
+        
+        student_info.item(selected_item[0], values=(
+            edit_idnum_var.get(),
+            edit_fname_var.get(),
+            edit_lname_var.get(),
+            edit_sex_var.get(),
+            edit_progcode_var.get(),
+            edit_year_var.get(),
+            edit_collname_var.get(),
+            edit_collcode_var.get()
+        ))
+
+        # Update the CSV file
+        with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='r') as file:
+            rows = list(csv.reader(file))
+
+        with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            for row in rows:
+                if row == student_data:
+                    writer.writerow([
+                        edit_idnum_var.get(),
+                        edit_fname_var.get(),
+                        edit_lname_var.get(),
+                        edit_sex_var.get(),
+                        edit_progcode_var.get(),
+                        edit_year_var.get(),
+                        edit_collname_var.get(),
+                        edit_collcode_var.get()
+                    ])
+                else:
+                    writer.writerow(row)
+
+        messagebox.showinfo("Success", "Student information updated successfully!")
+        edit_window.destroy()
+
+    Button(edit_window, text="Save Changes", command=save_changes).pack(pady=20)
 def save_to_csv():
     idnum = idnum_var.get()
     fname = fname_var.get()
@@ -63,7 +154,7 @@ def save_to_csv():
         messagebox.showwarning("Input Error", "All fields must be filled out")
         return
 
-    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='a') as file:
+    with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='a') as file:
         writer = csv.writer(file)
         writer.writerow([idnum, fname, lname, sex, progcode, year, collname, collcode])
 
@@ -83,38 +174,38 @@ def open_delete_college_window():
     delete_college_window.title("Delete College")
     delete_college_window.geometry("400x300")
 
-    # combobox for college selection
+    
     Label(delete_college_window, text="Select College to Delete:", font=("Arial", 12)).pack(pady=10)
     college_combobox = ttk.Combobox(delete_college_window, values=list(college_mapping.keys()), state="readonly", font=("Arial", 10))
     college_combobox.pack(pady=10)
 
-    # delete selected
+    
     def delete_college():
         selected_college = college_combobox.get()
         if not selected_college:
             messagebox.showwarning("Selection Error", "No college selected!")
             return
 
-        # Get the college code for the selected college
+        
         college_code = college_mapping.get(selected_college)
 
         if not college_code:
             messagebox.showerror("Error", "Selected college does not exist!")
             return
 
-        # Remove the college from the mapping
+        
         del college_mapping[selected_college]
 
-        # Remove the programs associated with the college
+        
         if college_code in college_programs:
             del college_programs[college_code]
 
         # Remove students associated with the college from the CSV file
         try:
-            with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'r', newline='') as file:
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', 'r', newline='') as file:
                 rows = list(csv.reader(file))
 
-            with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', 'w', newline='') as file:
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 for row in rows:
                     # Ensure the row has enough columns before accessing index 7
@@ -124,33 +215,34 @@ def open_delete_college_window():
             messagebox.showerror("File Error", "students.csv not found!")
             return
 
-        # Remove students associated with the college from the Treeview
-        for child in student_info.get_children():
-            values = student_info.item(child, 'values')
-            # Ensure the row has enough columns before accessing index 7
-            if len(values) > 7 and values[7] == college_code:  # College Code is in the 8th column (index 7)
-                student_info.delete(child)
+        
+        student_info.delete(*student_info.get_children()) 
+        load_from_csv()  
 
-        # Update the college dropdowns
+        
         CollName_entry['values'] = list(college_mapping.keys())
 
-        # Show success message and close the window
+        
         messagebox.showinfo("Success", f"College '{selected_college}' and its associated data have been deleted.")
         delete_college_window.destroy()
 
-    # Add a delete button
+   
     delete_button = ttk.Button(delete_college_window, text="Delete College", command=delete_college, style="TButton")
     delete_button.pack(pady=20)
 
 def load_from_csv():
     try:
-        with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
+        with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
-                student_info.insert('', 'end', values=row)
+                if any(row):  # Skip empty rows
+                    print("Row read from CSV:", row)  # Debug: Print each row
+                    student_info.insert('', 'end', values=row)
     except FileNotFoundError:
-        pass
-
+        messagebox.showerror("File Error", "students.csv not found!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred while loading students: {e}")
+        
 def delete_selected():
     selected_item = student_info.selection()
     if not selected_item:
@@ -160,10 +252,10 @@ def delete_selected():
     for item in selected_item:
         student_info.delete(item)
 
-    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
+    with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='r') as file:
         rows = list(csv.reader(file))
 
-    with open(r'c:\codes\Simple-Student-Info-System-main\students.csv', mode='r') as file:
+    with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\students.csv', mode='r') as file:
         writer = csv.writer(file)
         for row in rows:
             if not any(row == student_info.item(item, 'values') for item in selected_item):
@@ -193,7 +285,7 @@ def sort_by_column(column):
 
         column_index = student_info["columns"].index(column)
 
-        # Extract data from the Treeview, ensuring no out-of-range errors
+        
         data = []
         for child in student_info.get_children(''):
             values = student_info.item(child, 'values')
@@ -214,15 +306,161 @@ def validate_idnum(new_value):
     pattern = re.compile(r'^\d{0,4}(-\d{0,4})?$')
     return pattern.match(new_value) is not None
 
+def open_add_college_window():
+    add_college_window = Toplevel(root)
+    add_college_window.title("Add College")
+    add_college_window.geometry("400x400")
+
+    
+    new_college_name_var = StringVar()
+    new_college_code_var = StringVar()
+    new_programs_var = StringVar()
+
+    
+    Label(add_college_window, text="College Name:").pack(pady=5)
+    Entry(add_college_window, textvariable=new_college_name_var).pack(pady=5)
+
+    Label(add_college_window, text="College Code:").pack(pady=5)
+    Entry(add_college_window, textvariable=new_college_code_var).pack(pady=5)
+
+    Label(add_college_window, text="Programs (comma-separated):").pack(pady=5)
+    Entry(add_college_window, textvariable=new_programs_var).pack(pady=5)
+
+    
+    def save_new_college():
+        college_name = new_college_name_var.get().strip()
+        college_code = new_college_code_var.get().strip()
+        programs = new_programs_var.get().strip()
+
+        if not college_name or not college_code or not programs:
+            messagebox.showerror("Input Error", "All fields are required!")
+            return
+
+        
+        try:
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_mapping.csv', mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([college_name, college_code])
+        except Exception as e:
+            messagebox.showerror("File Error", f"Error writing to college_mapping.csv: {e}")
+            return
+
+        
+        try:
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_programs.csv', mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([college_code] + programs.split(','))
+        except Exception as e:
+            messagebox.showerror("File Error", f"Error writing to college_programs.csv: {e}")
+            return
+
+        
+        college_mapping[college_name] = college_code
+        college_programs[college_code] = programs.split(',')
+
+        
+        CollName_entry['values'] = list(college_mapping.keys())
+
+        messagebox.showinfo("Success", "College and programs added successfully!")
+        add_college_window.destroy()
+
+    Button(add_college_window, text="Save College", command=save_new_college).pack(pady=20)
+
+def open_edit_college_window():
+    edit_college_window = Toplevel(root)
+    edit_college_window.title("Edit College")
+    edit_college_window.geometry("400x400")
+
+    
+    selected_college_var = StringVar()
+    new_college_name_var = StringVar()
+    new_college_code_var = StringVar()
+    new_programs_var = StringVar()
+
+    
+    Label(edit_college_window, text="Select College to Edit:").pack(pady=5)
+    college_combobox = ttk.Combobox(edit_college_window, values=list(college_mapping.keys()), textvariable=selected_college_var, state="readonly")
+    college_combobox.pack(pady=5)
+
+    Label(edit_college_window, text="New College Name:").pack(pady=5)
+    Entry(edit_college_window, textvariable=new_college_name_var).pack(pady=5)
+
+    Label(edit_college_window, text="New College Code:").pack(pady=5)
+    Entry(edit_college_window, textvariable=new_college_code_var).pack(pady=5)
+
+    Label(edit_college_window, text="Add Programs (comma-separated):").pack(pady=5)
+    Entry(edit_college_window, textvariable=new_programs_var).pack(pady=5)
+
+    # Autofill current college details when a college is selected
+    def autofill_college_details(event):
+        selected_college = selected_college_var.get()
+        if selected_college in college_mapping:
+            new_college_name_var.set(selected_college)
+            new_college_code_var.set(college_mapping[selected_college])
+
+    college_combobox.bind("<<ComboboxSelected>>", autofill_college_details)
+
+    
+    def save_college_changes():
+        selected_college = selected_college_var.get()
+        new_college_name = new_college_name_var.get().strip()
+        new_college_code = new_college_code_var.get().strip()
+        new_programs = new_programs_var.get().strip()
+
+        if not selected_college:
+            messagebox.showwarning("Selection Error", "No college selected!")
+            return
+
+        if not new_college_name or not new_college_code:
+            messagebox.showerror("Input Error", "College name and code cannot be empty!")
+            return
+
+        
+        old_college_code = college_mapping[selected_college]
+        del college_mapping[selected_college]
+        college_mapping[new_college_name] = new_college_code
+
+        
+        if old_college_code in college_programs:
+            existing_programs = college_programs[old_college_code]
+            new_program_list = existing_programs + new_programs.split(',') if new_programs else existing_programs
+            college_programs[new_college_code] = list(set(new_program_list))  # Remove duplicates
+            del college_programs[old_college_code]
+
+        
+        try:
+            
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_mapping.csv', mode='w', newline='') as file:
+                writer = csv.writer(file)
+                for college_name, college_code in college_mapping.items():
+                    writer.writerow([college_name, college_code])
+
+            
+            with open(r'c:\Users\vandy\Downloads\Simple-Student-Info-System-main (4)\Simple-Student-Info-System-main\college_programs.csv', mode='w', newline='') as file:
+                writer = csv.writer(file)
+                for college_code, programs in college_programs.items():
+                    writer.writerow([college_code] + programs)
+        except Exception as e:
+            messagebox.showerror("File Error", f"Error updating CSV files: {e}")
+            return
+
+        
+        CollName_entry['values'] = list(college_mapping.keys())
+
+        messagebox.showinfo("Success", "College information updated successfully!")
+        edit_college_window.destroy()
+
+    Button(edit_college_window, text="Save Changes", command=save_college_changes).pack(pady=20)
+
 root = Tk()
 
 root.title("Student System Information")
 root.geometry("1450x500")
 
-frame = Frame(root, bg="#f0f0f0", bd=5, relief=RIDGE)
+frame = Frame(root, bg="white", bd=5, relief=RIDGE)
 frame.place(width=1450, height=500)
 
-# variables
+
 
 idnum_var = StringVar()
 fname_var = StringVar()
@@ -236,7 +474,7 @@ search_var = StringVar()
 
 # Saving student info
 
-StuInfo = LabelFrame(frame, text="Student Information", font=("Arial", 12, "bold"), bg="#e0e0e0", bd=5, relief=RIDGE)
+StuInfo = LabelFrame(frame, text="Student Information", font=("Arial", 12, "bold"), bg="#e0e0e0",fg="#800000", bd=5, relief=RIDGE)
 StuInfo.grid(row=0, column=0, sticky="news")
 
 idnum_label = Label(StuInfo, text="ID Number", font=("Arial", 10))
@@ -264,7 +502,7 @@ for widget in StuInfo.winfo_children():
     widget.grid_configure(padx=10, pady=10)
 
 # saving college info
-StuColl = LabelFrame(frame, text="College Information", font=("Arial", 12, "bold"), bg="#e0e0e0", bd=5, relief=RIDGE)
+StuColl = LabelFrame(frame, text="College Information", font=("Arial", 12, "bold"), bg="#e0e0e0",fg="#800000", bd=5, relief=RIDGE)
 StuColl.grid(row=1, column=0, sticky="news")
 
 CollName_label = Label(StuColl, text="College Name:", font=("Arial", 10))
@@ -283,22 +521,18 @@ for widget in StuColl.winfo_children():
     widget.grid_configure(padx=10, pady=10)
 
 # Saving Program Info
-StuProg = LabelFrame(frame, text="Program Information", font=("Arial", 12, "bold"), bg="#e0e0e0", bd=5, relief=RIDGE)
+StuProg = LabelFrame(frame, text="Program Information", font=("Arial", 12, "bold"), bg="#e0e0e0",fg="#800000", bd=5, relief=RIDGE)
 StuProg.grid(row=2, column=0, sticky="news")
 
 program_label = Label(StuProg, text="Select Program:", font=("Arial", 10))
 program_label.grid(row=0, column=0)
-ProgCode_label = Label(StuProg, text="Program Code", font=("Arial", 10))
-ProgCode_label.grid(row=1, column=0)
+
 Year_label = Label(StuProg, text="Year Level", font=("Arial", 10))
 Year_label.grid(row=2, column=0)
 
 # Program Info
 program_combobox = ttk.Combobox(StuProg, values=[], textvariable=progcode_var, font=("Arial", 10), state='readonly')
 program_combobox.grid(row=0, column=1)
-program_combobox.bind("<<ComboboxSelected>>", autofill_program_code)
-ProgCode_entry = Entry(StuProg, textvariable=progcode_var, font=("Arial", 10))
-ProgCode_entry.grid(row=1, column=1)
 Year_entry = ttk.Combobox(StuProg, values=["1", "2", "3", "4"], textvariable=year_var, font=("Arial", 10), state='readonly')
 Year_entry.grid(row=2, column=1)
 
@@ -309,7 +543,9 @@ for widget in StuProg.winfo_children():
 button_save = ttk.Button(frame, text="Save", command=save_to_csv, style="TButton")
 button_save.grid(row=3, column=0, sticky="news", padx=50, pady=10)
 
-Saved_student = LabelFrame(frame, text="Saved Students", font=("Arial", 12, "bold"), bg="#e0e0e0", bd=5, relief=RIDGE)
+
+
+Saved_student = LabelFrame(frame, text="Saved Students", font=("Arial", 12, "bold"), bg="#e0e0e0",fg="#800000", bd=5, relief=RIDGE)
 Saved_student.place(x=600, y=0, width=840, height=400)
 Search_frame = Frame(Saved_student, bg="#e0e0e0")
 Search_frame.pack(side=TOP, fill=X)
@@ -318,21 +554,44 @@ search_entry = Entry(Search_frame, textvariable=search_var, font=("Arial", 10))
 search_entry.grid(row=0, column=0, padx=20)
 search_entry.bind('<KeyRelease>', update_search_suggestions)
 
-# Button for college delete window
-button_delete_college = ttk.Button(Search_frame, text="Delete College", command=lambda: open_delete_college_window(), style="TButton")
-button_delete_college.grid(row=0, column=5, padx=10)
 
-button_delete = ttk.Button(Search_frame, text="Delete", command=delete_selected, style="TButton")
-button_delete.grid(row=0, column=1)
+edit_menu_button = Menubutton(Search_frame, text="Edit", relief=RAISED, font=("Arial", 10))
+edit_menu_button.grid(row=0, column=3, padx=10)
 
-button_sort_id = ttk.Button(Search_frame, text="Sort by ID Number", command=lambda: sort_by_column("ID Number"), style="TButton")
-button_sort_id.grid(row=0, column=2)
 
-button_sort_fname = ttk.Button(Search_frame, text="Sort by First Name", command=lambda: sort_by_column("First Name"), style="TButton")
-button_sort_fname.grid(row=0, column=3)
+edit_menu = Menu(edit_menu_button, tearoff=0)
+edit_menu_button.config(menu=edit_menu)
 
-button_sort_lname = ttk.Button(Search_frame, text="Sort by Last Name", command=lambda: sort_by_column("Last Name"), style="TButton")
-button_sort_lname.grid(row=0, column=4)
+
+edit_menu.add_command(label="Edit Student", command=open_edit_student_window)
+edit_menu.add_command(label="Edit College", command=open_edit_college_window)
+edit_menu.add_command(label="Add College", command=open_add_college_window)
+
+
+delete_menu_button = Menubutton(Search_frame, text="Delete", relief=RAISED, font=("Arial", 10))
+delete_menu_button.grid(row=0, column=1, padx=10)
+
+
+delete_menu = Menu(delete_menu_button, tearoff=0)
+delete_menu_button.config(menu=delete_menu)
+
+
+delete_menu.add_command(label="Delete Student", command=delete_selected)
+delete_menu.add_command(label="Delete College", command=open_delete_college_window)
+
+
+sort_menu_button = Menubutton(Search_frame, text="Sort", relief=RAISED, font=("Arial", 10))
+sort_menu_button.grid(row=0, column=2, padx=10)
+
+
+sort_menu = Menu(sort_menu_button, tearoff=0)
+sort_menu_button.config(menu=sort_menu)
+
+
+sort_menu.add_command(label="Sort by ID Number", command=lambda: sort_by_column("ID Number"))
+sort_menu.add_command(label="Sort by First Name", command=lambda: sort_by_column("First Name"))
+sort_menu.add_command(label="Sort by Last Name", command=lambda: sort_by_column("Last Name"))
+
 
 Data_frame = Frame(Saved_student, bg="#f0f0f0", bd=5, relief=RIDGE)
 Data_frame.pack(side=TOP, fill=BOTH, expand=True)
