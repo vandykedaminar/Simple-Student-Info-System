@@ -174,69 +174,85 @@ def open_delete_college_window():
     delete_college_window.title("Delete College")
     delete_college_window.geometry("400x300")
 
-    
     Label(delete_college_window, text="Select College to Delete:", font=("Arial", 12)).pack(pady=10)
     college_combobox = ttk.Combobox(delete_college_window, values=list(college_mapping.keys()), state="readonly", font=("Arial", 10))
     college_combobox.pack(pady=10)
 
-    
     def delete_college():
         selected_college = college_combobox.get()
         if not selected_college:
             messagebox.showwarning("Selection Error", "No college selected!")
             return
 
-        
         college_code = college_mapping.get(selected_college)
 
         if not college_code:
             messagebox.showerror("Error", "Selected college does not exist!")
             return
 
-        
+        # Remove from in-memory mappings
         del college_mapping[selected_college]
-
-        
         if college_code in college_programs:
             del college_programs[college_code]
+
+        # Remove from college_mapping.csv
+        try:
+            with open(r'./college_mapping.csv', 'r', newline='') as file:
+                rows = list(csv.reader(file))
+            with open(r'./college_mapping.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                for row in rows:
+                    if len(row) >= 2 and not (row[0] == selected_college and row[1] == college_code):
+                        writer.writerow(row)
+        except Exception as e:
+            messagebox.showerror("File Error", f"Error updating college_mapping.csv: {e}")
+            return
+
+        # Remove from college_programs.csv
+        try:
+            with open(r'./college_programs.csv', 'r', newline='') as file:
+                rows = list(csv.reader(file))
+            with open(r'./college_programs.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                for row in rows:
+                    if len(row) >= 1 and row[0] != college_code:
+                        writer.writerow(row)
+        except Exception as e:
+            messagebox.showerror("File Error", f"Error updating college_programs.csv: {e}")
+            return
 
         # Remove students associated with the college from the CSV file
         try:
             with open(r'students.csv', 'r', newline='') as file:
                 rows = list(csv.reader(file))
-
             with open(r'students.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 for row in rows:
-                    # Ensure the row has enough columns before accessing index 7
-                    if len(row) > 7 and row[7] != college_code:  # College Code is in the 8th column (index 7)
+                    if len(row) > 7 and row[7] != college_code:
                         writer.writerow(row)
         except FileNotFoundError:
             messagebox.showerror("File Error", "students.csv not found!")
             return
 
-        
-        student_info.delete(*student_info.get_children()) 
-        load_from_csv()  
+        student_info.delete(*student_info.get_children())
+        load_from_csv()
 
-        
         CollName_entry['values'] = list(college_mapping.keys())
 
-        
         messagebox.showinfo("Success", f"College '{selected_college}' and its associated data have been deleted.")
         delete_college_window.destroy()
 
-   
     delete_button = ttk.Button(delete_college_window, text="Delete College", command=delete_college, style="TButton")
     delete_button.pack(pady=20)
+
 
 def load_from_csv():
     try:
         with open(r'students.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
-                if any(row):  # Skip empty rows
-                    print("Row read from CSV:", row)  # Debug: Print each row
+                if any(row):  
+                    print("Row read from CSV:", row)  
                     student_info.insert('', 'end', values=row)
     except FileNotFoundError:
         messagebox.showerror("File Error", "students.csv not found!")
@@ -306,17 +322,16 @@ def validate_idnum(new_value):
     pattern = re.compile(r'^\d{0,4}(-\d{0,4})?$')
     return pattern.match(new_value) is not None
 
+
 def open_add_college_window():
     add_college_window = Toplevel(root)
     add_college_window.title("Add College")
     add_college_window.geometry("400x400")
 
-    
     new_college_name_var = StringVar()
     new_college_code_var = StringVar()
     new_programs_var = StringVar()
 
-    
     Label(add_college_window, text="College Name:").pack(pady=5)
     Entry(add_college_window, textvariable=new_college_name_var).pack(pady=5)
 
@@ -326,7 +341,6 @@ def open_add_college_window():
     Label(add_college_window, text="Programs (comma-separated):").pack(pady=5)
     Entry(add_college_window, textvariable=new_programs_var).pack(pady=5)
 
-    
     def save_new_college():
         college_name = new_college_name_var.get().strip()
         college_code = new_college_code_var.get().strip()
@@ -336,7 +350,17 @@ def open_add_college_window():
             messagebox.showerror("Input Error", "All fields are required!")
             return
 
-        
+       
+        try:
+            with open(r'./college_programs.csv', mode='r', newline='') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if row and row[0] == college_code:
+                        messagebox.showerror("Input Error", "College code already exists in college_programs.csv!")
+                        return
+        except FileNotFoundError:
+            pass  
+
         try:
             with open(r'./college_mapping.csv', mode='a', newline='') as file:
                 writer = csv.writer(file)
@@ -345,7 +369,6 @@ def open_add_college_window():
             messagebox.showerror("File Error", f"Error writing to college_mapping.csv: {e}")
             return
 
-        
         try:
             with open(r'./college_programs.csv', mode='a', newline='') as file:
                 writer = csv.writer(file)
@@ -357,7 +380,6 @@ def open_add_college_window():
         college_mapping[college_name] = college_code
         college_programs[college_code] = programs.split(',')
 
-        
         CollName_entry['values'] = list(college_mapping.keys())
 
         messagebox.showinfo("Success", "College and programs added successfully!")
@@ -365,6 +387,7 @@ def open_add_college_window():
 
     Button(add_college_window, text="Save College", command=save_new_college).pack(pady=20)
 
+# ...existing code...
 def open_edit_college_window():
     edit_college_window = Toplevel(root)
     edit_college_window.title("Edit College")
