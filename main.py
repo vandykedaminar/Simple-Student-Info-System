@@ -465,6 +465,7 @@ def open_edit_college_window():
         except Exception as e:
             messagebox.showerror("File Error", f"Error updating CSV files: {e}")
             return
+            
 
         
         CollName_entry['values'] = list(college_mapping.keys())
