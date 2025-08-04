@@ -49,15 +49,12 @@ def open_edit_student_window():
         messagebox.showwarning("Selection Error", "No student selected!")
         return
 
-    
     student_data = student_info.item(selected_item[0], 'values')
 
-    
     edit_window = Toplevel(root)
     edit_window.title("Edit Student")
     edit_window.geometry("400x600")
 
-    
     edit_idnum_var = StringVar(value=student_data[0])
     edit_fname_var = StringVar(value=student_data[1])
     edit_lname_var = StringVar(value=student_data[2])
@@ -67,9 +64,8 @@ def open_edit_student_window():
     edit_collname_var = StringVar(value=student_data[6])
     edit_collcode_var = StringVar(value=student_data[7])
 
-    
     Label(edit_window, text="ID Number:").pack(pady=5)
-    Entry(edit_window, textvariable=edit_idnum_var).pack(pady=5)
+    Entry(edit_window, textvariable=edit_idnum_var, state="readonly").pack(pady=5)
 
     Label(edit_window, text="First Name:").pack(pady=5)
     Entry(edit_window, textvariable=edit_fname_var).pack(pady=5)
@@ -80,9 +76,6 @@ def open_edit_student_window():
     Label(edit_window, text="Sex:").pack(pady=5)
     ttk.Combobox(edit_window, values=["F", "M"], textvariable=edit_sex_var, state="readonly").pack(pady=5)
 
-    Label(edit_window, text="Program Code:").pack(pady=5)
-    Entry(edit_window, textvariable=edit_progcode_var).pack(pady=5)
-
     Label(edit_window, text="Year Level:").pack(pady=5)
     ttk.Combobox(edit_window, values=["1", "2", "3", "4"], textvariable=edit_year_var, state="readonly").pack(pady=5)
 
@@ -91,20 +84,44 @@ def open_edit_student_window():
     college_combobox.pack(pady=5)
 
     Label(edit_window, text="College Code:").pack(pady=5)
-    Entry(edit_window, textvariable=edit_collcode_var, state="readonly").pack(pady=5)
+    coll_code_entry = Entry(edit_window, textvariable=edit_collcode_var, state="readonly")
+    coll_code_entry.pack(pady=5)
 
+    # --- MODIFICATION START ---
+    Label(edit_window, text="Program Name:").pack(pady=5)
     
-    def autofill_edit_college_code(event):
+    # Get initial programs for the student's current college
+    initial_programs = college_programs.get(student_data[7], []) # Use college code (index 7)
+    
+    # Create the program Combobox
+    program_combobox_edit = ttk.Combobox(edit_window, textvariable=edit_progcode_var, values=initial_programs, state="readonly")
+    program_combobox_edit.pack(pady=5)
+
+    def autofill_edit_college_code_and_programs(event):
         selected_college = edit_collname_var.get()
         if selected_college in college_mapping:
-            edit_collcode_var.set(college_mapping[selected_college])
+            new_college_code = college_mapping[selected_college]
+            edit_collcode_var.set(new_college_code)
+            
+            # Update the program combobox with programs from the new college
+            programs_for_new_college = college_programs.get(new_college_code, [])
+            program_combobox_edit['values'] = programs_for_new_college
+            
+            # Clear current program selection to force user to choose a new, valid one
+            edit_progcode_var.set("")
+        else:
+            # Clear everything if college is not found
+            edit_collcode_var.set("")
+            program_combobox_edit['values'] = []
+            edit_progcode_var.set("")
 
-    college_combobox.bind("<<ComboboxSelected>>", autofill_edit_college_code)
 
+    college_combobox.bind("<<ComboboxSelected>>", autofill_edit_college_code_and_programs)
+    # --- MODIFICATION END ---
     
     def save_changes():
-        
-        student_info.item(selected_item[0], values=(
+        # Get all current values from the form variables
+        updated_values = (
             edit_idnum_var.get(),
             edit_fname_var.get(),
             edit_lname_var.get(),
@@ -113,29 +130,33 @@ def open_edit_student_window():
             edit_year_var.get(),
             edit_collname_var.get(),
             edit_collcode_var.get()
-        ))
+        )
+
+        # Check if a program was selected
+        if not updated_values[4]:
+            messagebox.showerror("Input Error", "Please select a program for the student.")
+            return
+
+        # Update the Treeview
+        student_info.item(selected_item[0], values=updated_values)
 
         # Update the CSV file
-        with open(r'students.csv', mode='r') as file:
-            rows = list(csv.reader(file))
+        try:
+            with open(r'students.csv', mode='r', newline='') as file:
+                rows = list(csv.reader(file))
+        except FileNotFoundError:
+            messagebox.showerror("File Error", "students.csv not found!")
+            return
 
         with open(r'students.csv', mode='w', newline='') as file:
             writer = csv.writer(file)
             for row in rows:
-                if row == student_data:
-                    writer.writerow([
-                        edit_idnum_var.get(),
-                        edit_fname_var.get(),
-                        edit_lname_var.get(),
-                        edit_sex_var.get(),
-                        edit_progcode_var.get(),
-                        edit_year_var.get(),
-                        edit_collname_var.get(),
-                        edit_collcode_var.get()
-                    ])
+                # Find the row by ID number (which is read-only and unique)
+                if row and row[0] == student_data[0]:
+                    writer.writerow(list(updated_values))
                 else:
                     writer.writerow(row)
-
+        
         messagebox.showinfo("Success", "Student information updated successfully!")
         edit_window.destroy()
 
@@ -154,7 +175,7 @@ def save_to_csv():
         messagebox.showwarning("Input Error", "All fields must be filled out")
         return
 
-    with open(r'students.csv', mode='a') as file:
+    with open(r'students.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([idnum, fname, lname, sex, progcode, year, collname, collcode])
 
@@ -221,15 +242,22 @@ def open_delete_college_window():
             messagebox.showerror("File Error", f"Error updating college_programs.csv: {e}")
             return
 
-        # Remove students associated with the college from the CSV file
+        # Update students associated with the deleted college to have null/blank college info
         try:
             with open(r'students.csv', 'r', newline='') as file:
                 rows = list(csv.reader(file))
+            
+            updated_rows = []
+            for row in rows:
+                if len(row) > 7 and row[7] == college_code:
+                    # Clear the College Name (index 6) and College Code (index 7)
+                    row[6] = "" 
+                    row[7] = "" 
+                updated_rows.append(row)
+
             with open(r'students.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
-                for row in rows:
-                    if len(row) > 7 and row[7] != college_code:
-                        writer.writerow(row)
+                writer.writerows(updated_rows)
         except FileNotFoundError:
             messagebox.showerror("File Error", "students.csv not found!")
             return
@@ -239,7 +267,7 @@ def open_delete_college_window():
 
         CollName_entry['values'] = list(college_mapping.keys())
 
-        messagebox.showinfo("Success", f"College '{selected_college}' and its associated data have been deleted.")
+        messagebox.showinfo("Success", f"College '{selected_college}' has been deleted. Associated students' college information has been cleared.")
         delete_college_window.destroy()
 
     delete_button = ttk.Button(delete_college_window, text="Delete College", command=delete_college, style="TButton")
@@ -247,12 +275,14 @@ def open_delete_college_window():
 
 
 def load_from_csv():
+    # Clear existing treeview items before loading
+    for item in student_info.get_children():
+        student_info.delete(item)
     try:
         with open(r'students.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 if any(row):  
-                    print("Row read from CSV:", row)  
                     student_info.insert('', 'end', values=row)
     except FileNotFoundError:
         messagebox.showerror("File Error", "students.csv not found!")
@@ -260,42 +290,52 @@ def load_from_csv():
         messagebox.showerror("Error", f"An error occurred while loading students: {e}")
         
 def delete_selected():
-    selected_item = student_info.selection()
-    if not selected_item:
+    selected_items = student_info.selection()
+    if not selected_items:
         messagebox.showwarning("Selection Error", "No item selected")
         return
 
-    for item in selected_item:
+    # Get values of selected items before deleting from treeview
+    items_to_delete_values = [student_info.item(item, 'values') for item in selected_items]
+
+    for item in selected_items:
         student_info.delete(item)
 
-    with open(r'students.csv', mode='r') as file:
+    # Read all rows from the CSV
+    with open(r'students.csv', mode='r', newline='') as file:
         rows = list(csv.reader(file))
 
-    with open(r'students.csv', mode='r') as file:
+    # Write back only the rows that were not selected for deletion
+    with open(r'students.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         for row in rows:
-            if not any(row == student_info.item(item, 'values') for item in selected_item):
+            # The values from the treeview are strings, so we compare as a tuple of strings
+            if tuple(map(str, row)) not in items_to_delete_values:
                 writer.writerow(row)
+
 
 def update_search_suggestions(event):
     search_term = search_var.get().lower()
 
-    matching_items = []
-    for child in student_info.get_children():
-        values = student_info.item(child, 'values')
-        if any(search_term in str(value).lower() for value in values):
-            matching_items.append(child)
-
+    # Clear current treeview
     for item in student_info.get_children():
-        student_info.detach(item)
+        student_info.delete(item)
 
+    # If search is empty, reload all data
     if search_term == "":
         load_from_csv()
-    else:
-        for item in matching_items:
-            student_info.reattach(item, '', 'end')
-            student_info.selection_set(item)
-            student_info.see(item)
+        return
+
+    # Otherwise, filter and show matching data
+    try:
+        with open(r'students.csv', mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if any(row) and any(search_term in str(value).lower() for value in row):
+                    student_info.insert('', 'end', values=row)
+    except FileNotFoundError:
+        messagebox.showerror("File Error", "students.csv not found!")
+
 def sort_by_column(column):
     try:
 
